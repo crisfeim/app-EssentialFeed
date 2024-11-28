@@ -106,7 +106,7 @@ class URLSessionHTTPClientTests: XCTestCase {
                 client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
             }
             
-            if let error = stub.error {
+            if let error = Self.stub?.error {
                 client?.urlProtocol(self, didFailWithError: error)
             }
             
