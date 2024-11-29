@@ -148,7 +148,7 @@ class URLSessionHTTPClientTests: XCTestCase {
                 receivedError = error
             default:
                 XCTFail(
-                    "Expected failure with error \(error) got \(result) instead",
+                    "Expected failure, got \(result) instead",
                     file: file,
                     line: line)
             }
