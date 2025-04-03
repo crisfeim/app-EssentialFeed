@@ -43,10 +43,10 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		40B002502CF9F0420058D3E0 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		40B975402D9E7CB2009652B5 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"Helpers/XCTestCase+MemoryLeakTrackingHelper.swift",
+				"XCTestCase+MemoryLeakTrackingHelper.swift",
 			);
 			target = 40B002442CF9E9DB0058D3E0 /* EssentialFeedAPIEndToEndTests */;
 		};
@@ -63,8 +63,9 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		40124C322CF8BDD5008BBDB6 /* Feed Api */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (40B002502CF9F0420058D3E0 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "Feed Api"; sourceTree = "<group>"; };
+		40124C322CF8BDD5008BBDB6 /* Feed Api */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Feed Api"; sourceTree = "<group>"; };
 		40B002462CF9E9DB0058D3E0 /* EssentialFeedAPIEndToEndTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = EssentialFeedAPIEndToEndTests; sourceTree = "<group>"; };
+		40B9753D2D9E7CB2009652B5 /* Helpers */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (40B975402D9E7CB2009652B5 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Helpers; sourceTree = "<group>"; };
 		40C57D7A2CF7C16E00518522 /* FeedApi */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (40C57D7D2CF7C19100518522 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = FeedApi; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -128,6 +129,7 @@
 		080EDEFE21B6DA7E00813479 /* EssentialFeedTests */ = {
 			isa = PBXGroup;
 			children = (
+				40B9753D2D9E7CB2009652B5 /* Helpers */,
 				40B975392D9E7AD3009652B5 /* Feed Cache */,
 				40124C322CF8BDD5008BBDB6 /* Feed Api */,
 				080EDF0121B6DA7E00813479 /* Info.plist */,
@@ -198,6 +200,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				40124C322CF8BDD5008BBDB6 /* Feed Api */,
+				40B9753D2D9E7CB2009652B5 /* Helpers */,
 			);
 			name = EssentialFeedTests;
 			productName = EssentialFeedTests;
