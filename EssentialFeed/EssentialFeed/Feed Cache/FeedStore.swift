@@ -5,7 +5,6 @@
 //  Created by Cristian Felipe Patiño Rojas on 3/4/25.
 //
 
-
 import Foundation
 
 public protocol FeedStore {
