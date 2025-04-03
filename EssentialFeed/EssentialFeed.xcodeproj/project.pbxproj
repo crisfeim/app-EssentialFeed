@@ -13,6 +13,7 @@
 		40B002492CF9E9DB0058D3E0 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; };
 		40B9753B2D9E7AE2009652B5 /* CacheFeedUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B9753A2D9E7ADB009652B5 /* CacheFeedUseCaseTests.swift */; };
 		40B975432D9E9FC4009652B5 /* LocalFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B975422D9E9FC4009652B5 /* LocalFeedLoader.swift */; };
+		40B975452D9EA01D009652B5 /* FeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B975442D9EA01D009652B5 /* FeedStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		40B002452CF9E9DB0058D3E0 /* EssentialFeedAPIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedAPIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		40B9753A2D9E7ADB009652B5 /* CacheFeedUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheFeedUseCaseTests.swift; sourceTree = "<group>"; };
 		40B975422D9E9FC4009652B5 /* LocalFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeedLoader.swift; sourceTree = "<group>"; };
+		40B975442D9EA01D009652B5 /* FeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -161,6 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				40B975422D9E9FC4009652B5 /* LocalFeedLoader.swift */,
+				40B975442D9EA01D009652B5 /* FeedStore.swift */,
 			);
 			path = "Feed Cache";
 			sourceTree = "<group>";
@@ -316,6 +319,7 @@
 			files = (
 				080EDF0E21B6DCB600813479 /* FeedLoader.swift in Sources */,
 				080EDF0C21B6DAE800813479 /* FeedItem.swift in Sources */,
+				40B975452D9EA01D009652B5 /* FeedStore.swift in Sources */,
 				40B975432D9E9FC4009652B5 /* LocalFeedLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
