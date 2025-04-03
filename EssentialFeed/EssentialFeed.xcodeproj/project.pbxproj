@@ -15,6 +15,7 @@
 		40B975432D9E9FC4009652B5 /* LocalFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B975422D9E9FC4009652B5 /* LocalFeedLoader.swift */; };
 		40B975452D9EA01D009652B5 /* FeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B975442D9EA01D009652B5 /* FeedStore.swift */; };
 		40B975492D9EA7A2009652B5 /* LocalFeedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B975482D9EA7A2009652B5 /* LocalFeedImage.swift */; };
+		40B9754B2D9EC061009652B5 /* LoadFeedFromCacheUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B9754A2D9EC05C009652B5 /* LoadFeedFromCacheUseCaseTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +47,7 @@
 		40B975422D9E9FC4009652B5 /* LocalFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeedLoader.swift; sourceTree = "<group>"; };
 		40B975442D9EA01D009652B5 /* FeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStore.swift; sourceTree = "<group>"; };
 		40B975482D9EA7A2009652B5 /* LocalFeedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeedImage.swift; sourceTree = "<group>"; };
+		40B9754A2D9EC05C009652B5 /* LoadFeedFromCacheUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadFeedFromCacheUseCaseTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -157,6 +159,7 @@
 		40B975392D9E7AD3009652B5 /* Feed Cache */ = {
 			isa = PBXGroup;
 			children = (
+				40B9754A2D9EC05C009652B5 /* LoadFeedFromCacheUseCaseTests.swift */,
 				40B9753A2D9E7ADB009652B5 /* CacheFeedUseCaseTests.swift */,
 			);
 			path = "Feed Cache";
@@ -334,6 +337,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				40B9753B2D9E7AE2009652B5 /* CacheFeedUseCaseTests.swift in Sources */,
+				40B9754B2D9EC061009652B5 /* LoadFeedFromCacheUseCaseTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
