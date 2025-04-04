@@ -186,6 +186,18 @@ class CodableFeedStoreTests: XCTestCase {
         expect(sut, toRetrieve: .empty)
     }
     
+    func test_delete_deliversErrorOnDeletionError() {
+        let noDeletePermissionURL = FileManager.default.urls(for: .cachesDirectory, in: .systemDomainMask).first
+        let sut = makeSUT(storeURL: noDeletePermissionURL)
+        let exp = expectation(description: "Wait for deletion")
+        sut.deleteCachedFeed {
+            exp.fulfill()
+            XCTAssertNotNil($0)
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     // MARK: - Helpers
     private func makeSUT(
         storeURL: URL? = nil,
