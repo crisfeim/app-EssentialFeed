@@ -72,6 +72,12 @@ class CodableFeedStoreTests: XCTestCase {
         try? FileManager.default.removeItem(at: storeURL)
     }
     
+    override func tearDown() {
+        super.setUp()
+        let storeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("image-feed.store")
+        try? FileManager.default.removeItem(at: storeURL)
+    }
+    
     func test_retrieve_deliversEmptyOnEmptyCache() {
         let sut = makeSUT()
         let exp = expectation(description: "")
