@@ -104,8 +104,12 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         line: UInt = #line
     ) {
         let exp = expectation(description: "Wait for save completion")
-        sut.save(feed) { error in
+        sut.save(feed) { result in
+            switch result {
+            case let .failure(error):
                 XCTAssertNil(error, "Unexpected error: \(String(describing: error))", file: file, line: line)
+            default: break
+            }
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
