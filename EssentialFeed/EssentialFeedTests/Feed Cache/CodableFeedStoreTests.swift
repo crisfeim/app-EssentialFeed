@@ -71,6 +71,9 @@ class CodableFeedStoreTests: XCTestCase, FeedStoreSpecs {
         assertThatStoreSideEffectsRunSerially(on: sut)
     }
     
+    func test_delete_deliversNoErrorOnEmptyCache() {}
+    func test_delete_deliversNoErrorOnNonEmptyCache() {}
+    
     // MARK: - Helpers
     private func makeSUT(
         storeURL: URL? = nil,
