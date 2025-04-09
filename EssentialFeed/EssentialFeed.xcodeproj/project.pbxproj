@@ -89,6 +89,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		40412A562DA678BE004677C4 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"XCTestCase+MemoryLeakTrackingHelper.swift",
+			);
+			target = 40412A492DA67465004677C4 /* EssentialFeedCacheIntegrationTests */;
+		};
 		40B975402D9E7CB2009652B5 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
