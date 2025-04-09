@@ -64,10 +64,10 @@ class CoreDataFeedStoreSpecs: XCTestCase, FeedStoreSpecs {
     }
     
     // MARK: - Helpers
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> CoreDataStore {
-        let storeBundle = Bundle(for: CoreDataStore.self)
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> CoreDataFeedStore {
+        let storeBundle = Bundle(for: CoreDataFeedStore.self)
         let storeURL = URL(fileURLWithPath: "/dev/null")
-        let sut = try! CoreDataStore(
+        let sut = try! CoreDataFeedStore(
             storeURL: storeURL,
             bundle: storeBundle
         )
