@@ -150,6 +150,12 @@ extension FeedStoreSpecs where Self: XCTestCase {
         XCTAssertNil(deletionError, "Expected empty cache deletion to succeed", file: file, line: line)
     }
     
+    func assertThatDeleteDeliversNoErrorOnNonEmptyCache(on sut: FeedStore, file: StaticString = #file, line: UInt = #line) {
+        insert((uniqueImageFeed().local, Date()), to: sut)
+        let deletionError = deleteCache(from: sut)
+        XCTAssertNil(deletionError, "Expected empty cache deletion to succeed", file: file, line: line)
+    }
+    
     func assertThatDeleteHasNoSideEffectOnEmptyCache(
         on sut: FeedStore,
         file: StaticString = #file,
