@@ -118,7 +118,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         
         
         switch result {
-        case let .success(data, response):
+        case let .success((data, response)):
             return (data: data, response: response)
         default:
             XCTFail(
@@ -136,7 +136,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         error: Error?,
         file: StaticString = #file,
         line: UInt = #line
-    ) -> HTTPClientResult {
+    ) -> HTTPClient.Result {
         let url = anyURL()
         let sut = makeSUT(file: file, line: line)
         URLProtocolStub.stub(
@@ -146,7 +146,7 @@ class URLSessionHTTPClientTests: XCTestCase {
         
         let exp = expectation(description: "Wait for completion")
         
-        var receivedResult: HTTPClientResult!
+        var receivedResult: HTTPClient.Result!
         
         sut.get(from: url) { result in
             receivedResult = result
@@ -169,14 +169,9 @@ class URLSessionHTTPClientTests: XCTestCase {
     }
     
     private func anyData() -> Data { Data("any data".utf8) }
-    private func anyNSError() -> NSError { NSError(domain: "any error", code: 0) }
     
     private func nonHTTPURLResponse() -> URLResponse { URLResponse() }
     private func anyHTTPURLResponse() -> HTTPURLResponse { HTTPURLResponse() }
-    
-    private func anyURL() -> URL {
-        URL(string: "http://any-url.com")!
-    }
     
     private class URLProtocolStub: URLProtocol {
         private static var stub: Stub?
