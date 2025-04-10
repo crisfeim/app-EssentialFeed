@@ -1,8 +1,8 @@
 {
   "configurations" : [
     {
-      "id" : "0C2FB2CF-3441-414C-81D3-783B644B7E7A",
-      "name" : "Test Scheme Action",
+      "id" : "7AC47FC3-4C77-4455-9E81-477A1EE17D62",
+      "name" : "Configuration 1",
       "options" : {
 
       }
@@ -22,7 +22,6 @@
   },
   "testTargets" : [
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:EssentialFeed.xcodeproj",
         "identifier" : "40B002442CF9E9DB0058D3E0",
