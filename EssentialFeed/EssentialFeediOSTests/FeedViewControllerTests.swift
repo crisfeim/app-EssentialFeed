@@ -147,7 +147,7 @@ final class FeedViewControllerTests: XCTestCase {
     }
 }
 
-extension FeedViewController {
+private extension FeedViewController {
     
     func simulateUserInitiatedFeedReload() {
         refreshControl?.simulatePullToRefresh()
@@ -189,7 +189,7 @@ extension FeedViewController {
     }
 }
 
-extension UIRefreshControl {
+private extension UIRefreshControl {
     func simulatePullToRefresh() {
         beginRefreshing()
         allTargets.forEach { target in
