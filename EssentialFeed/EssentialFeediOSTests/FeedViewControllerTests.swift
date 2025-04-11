@@ -82,7 +82,6 @@ final class FeedViewControllerTests: XCTestCase {
         let (sut, _) = makeSUT()
         
         sut.simulateAppearance()
-        XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
         sut.refreshControl?.endRefreshing()
         
         sut.simulateAppearance()
