@@ -149,6 +149,30 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(view1?.isShowingImageLoadingIndicator, false, "Expected no loading indicator for second view once second image completes with error")
     }
     
+    func test_feedImageView_rendersImageLoadedFromURL() {
+        let (sut, loader) = makeSUT()
+        
+        sut.simulateAppearance()
+        loader.completeFeedLoading(with: [makeImage(), makeImage()], at: 0)
+        
+        let view0 = sut.simulateFeedImageViewVisible(at: 0)
+        let view1 = sut.simulateFeedImageViewVisible(at: 1)
+        
+        
+        XCTAssertEqual(view0?.renderedImage, .none, "Expected no image for 1st view hile loading 1st image")
+        XCTAssertEqual(view1?.renderedImage, .none, "Expected no image for 2nd view hile loading 2nd image")
+        
+        let imageData0 = UIImage.make(withColor: .red).pngData()!
+        loader.completeImageLoading(with: imageData0, at: 0)
+        XCTAssertEqual(view0?.renderedImage, imageData0, "Expected image for 1st view once 1st image loading completes succesfully")
+        XCTAssertEqual(view1?.renderedImage, .none, "Expected no image for 2nd view once 1st image loading completes succesfully")
+        
+        let imageData1 =  UIImage.make(withColor: .blue).pngData()!
+        loader.completeImageLoading(with: imageData1, at: 1)
+        XCTAssertEqual(view0?.renderedImage, imageData0, "Expected no image state change for 1st view once 2nd image loading completes succesfully")
+        XCTAssertEqual(view1?.renderedImage, imageData1, "Expected image for 2nd view once 2nd image loading completes succesfully")
+    }
+    
     // MARK: - Helper
     
     private func makeSUT(
@@ -371,6 +395,10 @@ private extension FeedImageCell {
     var isShowingImageLoadingIndicator: Bool {
         return feedImageContainer.isShimmering
     }
+    
+    var renderedImage: Data? {
+        return feedImageView.image?.pngData()
+    }
 }
 
 private extension UIRefreshControl {
@@ -379,6 +407,22 @@ private extension UIRefreshControl {
             actions(forTarget: target, forControlEvent: .valueChanged)?.forEach {
                 (target as NSObject).perform(Selector($0))
             }
+        }
+    }
+}
+
+extension UIImage {
+    static func make(withColor color: UIColor) -> UIImage {
+        let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        
+        return UIGraphicsImageRenderer(
+            size: rect.size,
+            format: format
+        ).image { rendererContext in
+            color.setFill()
+            rendererContext.fill(rect)
         }
     }
 }
