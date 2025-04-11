@@ -24,11 +24,9 @@ final class FeedViewController: UITableViewController {
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
         onViewIsAppearing = { vc in
-            vc.refreshControl?.beginRefreshing()
+            vc.load()
             vc.onViewIsAppearing = nil
         }
-        
-        load()
     }
     
     override func viewIsAppearing(_ animated: Bool) {
@@ -36,6 +34,7 @@ final class FeedViewController: UITableViewController {
     }
     
     @objc func load() {
+       refreshControl?.beginRefreshing()
         loader?.load { [weak self] _ in
             self?.refreshControl?.endRefreshing()
         }
@@ -44,40 +43,24 @@ final class FeedViewController: UITableViewController {
 
 final class FeedViewControllerTests: XCTestCase {
     
-    func test_init_doesNotLoadFeed() {
-        let (_, loader) = makeSUT()
-        XCTAssertEqual(loader.loadCallCount, 0)
-    }
-    
-    func test_viewDidLoad_loadsFeed() {
-        let (sut, loader) = makeSUT()
-        sut.loadViewIfNeeded()
-        
-        XCTAssertEqual(loader.loadCallCount, 1)
-    }
-    
     func test_viewDidLoad_doesNotShowRefreshControl() {
         let (sut, _) = makeSUT()
         sut.loadViewIfNeeded()
         XCTAssertFalse(sut.isShowingLoadingIndicator)
     }
     
-    func test_userInitiatedFeedReload_reloadsFeed() {
+    func test_loadFeedActions_requestFeedFromLoader() {
         let (sut, loader) = makeSUT()
-        
-        sut.loadViewIfNeeded()
+        XCTAssertEqual(loader.loadCallCount, 0)
+    
+        sut.simulateAppearance()
+        XCTAssertEqual(loader.loadCallCount, 1)
         
         sut.simulateUserInitiatedFeedReload()
         XCTAssertEqual(loader.loadCallCount, 2)
         
         sut.simulateUserInitiatedFeedReload()
         XCTAssertEqual(loader.loadCallCount, 3)
-    }
-    
-    func test_viewIsAppearing_showsLoadingIndicator() {
-        let (sut, _) = makeSUT()
-        sut.simulateAppearance()
-        XCTAssertTrue(sut.isShowingLoadingIndicator)
     }
     
     func test_viewIsAppearing_showsLoadingIndicatorOnce() {
@@ -90,30 +73,19 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertFalse(sut.isShowingLoadingIndicator)
     }
     
-    func test_viewDidLoad_hidesLoadingIndicatorOnLoaderCompletion() {
+    func test_viewIsAppearing_showsLoadingIndicator() {
         let (sut, loader) = makeSUT()
-       
-        sut.simulateAppearance()
-        loader.completeFeedLoading()
         
-        XCTAssertFalse(sut.isShowingLoadingIndicator)
-    }
-    
-    func test_userInitiatedFeedReload_showsLoadingIndicator() {
-        let (sut, _) = makeSUT()
         sut.simulateAppearance()
-        sut.refreshControl?.endRefreshing()
+        XCTAssertTrue(sut.isShowingLoadingIndicator)
+        
+        loader.completeFeedLoading(at: 0)
+        XCTAssertFalse(sut.isShowingLoadingIndicator)
+        
         sut.simulateUserInitiatedFeedReload()
         XCTAssertTrue(sut.isShowingLoadingIndicator)
-    }
-    
-    func test_userInitiatedFeedReload_hidesLoadingIndicatorOnLoaderCompletion() {
-        let (sut, loader) = makeSUT()
-        sut.simulateAppearance()
-        sut.refreshControl?.endRefreshing()
-        sut.simulateUserInitiatedFeedReload()
-        loader.completeFeedLoading()
         
+        loader.completeFeedLoading(at: 1)
         XCTAssertFalse(sut.isShowingLoadingIndicator)
     }
     
@@ -141,8 +113,8 @@ final class FeedViewControllerTests: XCTestCase {
             completions.append(completion)
         }
         
-        func completeFeedLoading() {
-            completions[0](.success([]))
+        func completeFeedLoading(at index: Int) {
+            completions[index](.success([]))
         }
     }
 }
@@ -195,7 +167,6 @@ private extension FeedViewController {
 
 private extension UIRefreshControl {
     func simulatePullToRefresh() {
-        beginRefreshing()
         allTargets.forEach { target in
             actions(forTarget: target, forControlEvent: .valueChanged)?.forEach {
                 (target as NSObject).perform(Selector($0))
