@@ -77,7 +77,6 @@ final class FeedViewControllerTests: XCTestCase {
     
     func test_viewIsAppearing_showsLoadingIndicatorOnce() {
         let (sut, _) = makeSUT()
-        sut.replaceRefreshControlWithFake()
         
         sut.simulateAppearance()
         XCTAssertEqual(sut.refreshControl?.isRefreshing, true)
@@ -114,6 +113,10 @@ final class FeedViewControllerTests: XCTestCase {
 extension FeedViewController {
     
     func simulateAppearance() {
+        if !isViewLoaded {
+            loadViewIfNeeded()
+            replaceRefreshControlWithFake()
+        }
         beginAppearanceTransition(true, animated: false)
         endAppearanceTransition()
     }
