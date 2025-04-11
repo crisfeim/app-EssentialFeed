@@ -173,7 +173,7 @@ private extension FeedViewController {
                 fake.addTarget(target, action: Selector(action), for: .valueChanged)
             }
         }
-        refreshControl = FakeRefreshControl()
+        refreshControl = fake
         
     }
     
