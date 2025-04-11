@@ -73,7 +73,7 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 3, "Expect a third loading request once user initiates another reload")
     }
     
-    func test_viewIsAppearing_showsLoadingIndicator() {
+    func test_loadingFeedIndicator_isVisibleWhileLoadingFeed() {
         let (sut, loader) = makeSUT()
         
         sut.simulateAppearance()
