@@ -23,13 +23,21 @@ public final class FeedRefreshViewController: NSObject {
     
     func binded(_ view: UIRefreshControl) -> UIRefreshControl {
         view.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        viewModel.onChange = { [weak self] viewModel in
-            if viewModel.isLoading {
-                self?.view.beginRefreshing()
-            } else {
-                self?.view.endRefreshing()
-            }
+        // @todo @question: when capturingo only the view
+        // test fail: test_loadingFeedIndicator_isVisibleWhileLoadingFeed
+        viewModel.onLoadingStateChange = { [weak self] isLoading in
+            self?.view.refreshIf(isLoading)
         }
         return view
+    }
+}
+
+private extension UIRefreshControl {
+    func refreshIf(_ shouldRefresh: Bool) {
+        if shouldRefresh {
+            beginRefreshing()
+        } else {
+            endRefreshing()
+        }
     }
 }
