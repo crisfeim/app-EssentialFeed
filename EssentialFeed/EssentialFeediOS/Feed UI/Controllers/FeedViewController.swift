@@ -8,8 +8,34 @@
 import EssentialFeed
 import UIKit
 
+final class FeedRefreshViewController: NSObject {
+    
+    private(set) lazy var view: UIRefreshControl = {
+        let view = UIRefreshControl()
+        view.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        return view
+    }()
+    
+    private let feedLoader: FeedLoader
+    
+    var onRefresh: (([FeedImage]) -> Void)?
+    init(feedLoader: FeedLoader) {
+        self.feedLoader = feedLoader
+    }
+    
+    @objc func refresh() {
+        view.beginRefreshing()
+         feedLoader.load { [weak self] result in
+             self?.view.endRefreshing()
+             if let feed = try? result.get() {
+                 self?.onRefresh?(feed)
+             }
+         }
+    }
+}
+
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
-    private var feedLoader: FeedLoader?
+    private var refreshController: FeedRefreshViewController?
     private var imageLoader: FeedImageDataLoader?
     private var tableModel = [FeedImage]()
     
@@ -22,37 +48,28 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
         imageLoader: FeedImageDataLoader
     ) {
         self.init()
-        self.feedLoader = loader
+        self.refreshController = FeedRefreshViewController(feedLoader: loader)
         self.imageLoader = imageLoader
     }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
-        
+        refreshControl = refreshController?.view
+        refreshController?.onRefresh = { [weak self] feed in
+            self?.tableModel = feed
+            self?.tableView.reloadData()
+        }
         tableView.prefetchDataSource = self
         
         onViewIsAppearing = { vc in
-            vc.load()
+            vc.refreshController?.refresh()
             vc.onViewIsAppearing = nil
         }
     }
     
     public override func viewIsAppearing(_ animated: Bool) {
         onViewIsAppearing?(self)
-    }
-    
-    @objc func load() {
-       refreshControl?.beginRefreshing()
-        feedLoader?.load { [weak self] result in
-            self?.refreshControl?.endRefreshing()
-            if let feed = try? result.get() {
-                self?.tableModel = feed
-                self?.tableView.reloadData()
-            }
-        }
     }
     
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
