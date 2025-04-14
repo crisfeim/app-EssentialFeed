@@ -7,27 +7,28 @@
 
 import UIKit
 
-public final class FeedRefreshViewController: NSObject {
+
+public final class FeedRefreshViewController: NSObject, FeedLoadingView {
     
-    public lazy var view = binded(UIRefreshControl())
+    public lazy var view = loadView()
     
-    private let viewModel: FeedViewModel
+    private let presenter: FeedPresenter
     
-    init(viewModel: FeedViewModel) {
-        self.viewModel = viewModel
+    init(presenter: FeedPresenter) {
+        self.presenter = presenter
     }
     
     @objc func refresh() {
-        viewModel.loadFeed()
+        presenter.loadFeed()
     }
     
-    func binded(_ view: UIRefreshControl) -> UIRefreshControl {
+    func display(isLoading: Bool) {
+        view.refreshIf(isLoading)
+    }
+    
+    func loadView() -> UIRefreshControl {
+        let view = UIRefreshControl()
         view.addTarget(self, action: #selector(refresh), for: .valueChanged)
-        // @todo @question: when capturingo only the view
-        // test fail: test_loadingFeedIndicator_isVisibleWhileLoadingFeed
-        viewModel.onLoadingStateChange = { [weak self] isLoading in
-            self?.view.refreshIf(isLoading)
-        }
         return view
     }
 }
