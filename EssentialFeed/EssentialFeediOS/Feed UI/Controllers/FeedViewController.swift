@@ -20,11 +20,11 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     private var onViewIsAppearing: ((FeedViewController) -> ())?
     
     public convenience init(
-        loader: FeedLoader,
+        feedLoader: FeedLoader,
         imageLoader: FeedImageDataLoader
     ) {
         self.init()
-        self.refreshController = FeedRefreshViewController(feedLoader: loader)
+        self.refreshController = FeedRefreshViewController(feedLoader: feedLoader)
         self.imageLoader = imageLoader
     }
     
