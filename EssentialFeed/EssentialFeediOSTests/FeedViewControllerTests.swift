@@ -265,10 +265,10 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.loadedImageURLs, [], "Expected no image URL requests until image is near visible")
         
         sut.simulateFeedImageViewNotNearVisible(at: 0)
-        XCTAssertEqual(loader.cancelledImageURls, [image0.url], "Expected first image URL request once first image is near visible")
+        XCTAssertEqual(loader.cancelledImageURls, [image0.url], "Expected first image URL request cancle once first image is not near visible")
         
         sut.simulateFeedImageViewNotNearVisible(at: 1)
-        XCTAssertEqual(loader.cancelledImageURls, [image0.url, image1.url], "Expected second image URL request once second image is near visible")
+        XCTAssertEqual(loader.cancelledImageURls, [image0.url, image1.url], "Expected second image URL request cancel once second image is not near visible")
     }
     
     // MARK: - Helper
