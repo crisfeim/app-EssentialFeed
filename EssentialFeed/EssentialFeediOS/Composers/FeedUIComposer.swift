@@ -27,7 +27,8 @@ public enum FeedUIComposer {
     private static func adaptFeedCellControllers(forwardingTo controller: FeedViewController, loader: FeedImageDataLoader) -> ([FeedImage]) -> Void {
         return { [weak controller] feed in
             controller?.tableModel = feed.map {
-                FeedImageCellController(model: $0, imageLoader: loader)
+                let viewModel = FeedImageViewModel(model: $0, imageLoader: loader)
+                return FeedImageCellController(viewModel: viewModel)
             }
         }
     }
