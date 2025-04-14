@@ -5,45 +5,53 @@
 //  Created by Cristian Felipe Patiño Rojas on 14/4/25.
 //
 
-
 import EssentialFeed
 import UIKit
 
 final class FeedImageCellController {
    
-    let viewModel: FeedImageViewModel
+    let viewModel: FeedImageViewModel<UIImage>
     
-    init(viewModel: FeedImageViewModel) {
+    init(viewModel: FeedImageViewModel<UIImage>) {
         self.viewModel = viewModel
     }
     
     func view() -> UITableViewCell {
-        let cell = FeedImageCell()
-        cell.locationContainer.isHidden = viewModel.shouldHideLocationContainer
-        cell.locationLabel.text = viewModel.location
-        cell.descriptionLabel.text = viewModel.description
-        cell.feedImageView.image = nil
-        cell.feedImageRetryButton.isHidden = true
-        cell.feedImageContainer.startShimmering()
-        
-        viewModel.onChange = { [weak cell] result in
-            let data = try? result.get()
-            let image = data.map(UIImage.init) ?? nil
-            cell?.feedImageView.image = image
-            cell?.feedImageRetryButton.isHidden = (image != nil)
-            cell?.feedImageContainer.stopShimmering()
-        }
-        
-        cell.onRetry = viewModel.loadImage
-        viewModel.loadImage()
+        let cell = binded(FeedImageCell())
+        viewModel.loadImageData()
         return cell
     }
     
     func preload() {
-        viewModel.preloadImage()
+        viewModel.loadImageData()
     }
     
     func cancelLoad() {
-        viewModel.cancelLoad()
+        viewModel.cancelImageDataLoad()
+    }
+    
+    private func binded(_ cell: FeedImageCell) -> FeedImageCell {
+        cell.locationContainer.isHidden = !viewModel.hasLocation
+        cell.locationLabel.text = viewModel.location
+        cell.descriptionLabel.text = viewModel.description
+        cell.onRetry = viewModel.loadImageData
+
+        viewModel.onImageLoad = { [weak cell] image in
+            cell?.feedImageView.image = image
+        }
+        
+        viewModel.onImageLoadingStateChange = { [weak cell] isLoading in
+            if isLoading {
+                cell?.feedImageContainer.startShimmering()
+            } else {
+                cell?.feedImageContainer.stopShimmering()
+            }
+        }
+        
+        viewModel.onShouldRetryImageLoadStateChange = { [weak cell] shouldRetry in
+            cell?.feedImageRetryButton.isHidden = !shouldRetry
+        }
+        
+        return cell
     }
 }
