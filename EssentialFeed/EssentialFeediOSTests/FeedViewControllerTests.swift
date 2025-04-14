@@ -281,7 +281,8 @@ final class FeedViewControllerTests: XCTestCase {
         loader: LoaderSpy
     ) {
         let loader = LoaderSpy()
-        let sut = FeedViewController(
+        
+        let sut = FeedUIComposer.feedComposedWith(
             feedLoader: loader,
             imageLoader: loader
         )
