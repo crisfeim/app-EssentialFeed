@@ -8,16 +8,29 @@
 import Foundation
 import EssentialFeed
 
+struct FeedImageViewModel<T> {
+    let image: T
+}
+
 protocol FeedImageView {
-    func display<T>(image: T)
+    func display<T>(_ viewModel: FeedImageViewModel<T>)
+}
+
+
+struct FeedImageLoadingViewModel {
+    let isLoading: Bool
 }
 
 protocol FeedImageLoadingView {
-    func display(isLoading: Bool)
+    func display(_ viewModel: FeedImageLoadingViewModel)
+}
+
+struct FeedImageRetryViewModel {
+    let shouldRetry: Bool
 }
 
 protocol FeedImageRetryView {
-    func display(shouldRetry: Bool)
+    func display(_ viewModel: FeedImageRetryViewModel)
 }
 
 final class FeedImagePresenter<Image> {
@@ -44,8 +57,8 @@ final class FeedImagePresenter<Image> {
     var imageRetryView: FeedImageRetryView?
     
     func loadImageData() {
-        imageLoadingView?.display(isLoading: true)
-        imageRetryView?.display(shouldRetry: false)
+        imageLoadingView?.display(FeedImageLoadingViewModel(isLoading: true))
+        imageRetryView?.display(FeedImageRetryViewModel(shouldRetry: false))
         task = imageLoader.loadImageData(from: url) { [weak self] result in
             self?.handle(result)
         }
@@ -53,11 +66,11 @@ final class FeedImagePresenter<Image> {
     
     private func handle(_ result: FeedImageDataLoader.Result) {
         if let image = (try? result.get()).flatMap(imageTransformer) {
-            imageView?.display(image: image)
+            imageView?.display(FeedImageViewModel(image: image))
         } else {
-            imageRetryView?.display(shouldRetry: true)
+            imageRetryView?.display(FeedImageRetryViewModel(shouldRetry: true))
         }
-        imageLoadingView?.display(isLoading: false)
+        imageLoadingView?.display(FeedImageLoadingViewModel(isLoading: false))
     }
     
     func cancelImageDataLoad() {

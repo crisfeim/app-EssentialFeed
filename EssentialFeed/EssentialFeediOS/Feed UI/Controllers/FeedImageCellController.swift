@@ -45,14 +45,14 @@ final class FeedImageCellController {
 
 
 extension FeedImageCellController: FeedImageView {
-    func display<T>(image: T) {
-        cell?.feedImageView.image = image as? UIImage
+    func display<T>(_ viewModel: FeedImageViewModel<T>) {
+        cell?.feedImageView.image = viewModel.image as? UIImage
     }
 }
 
 extension FeedImageCellController: FeedImageLoadingView  {
-    func display(isLoading: Bool) {
-        if isLoading {
+    func display(_ viewModel: FeedImageLoadingViewModel) {
+        if viewModel.isLoading {
             cell?.feedImageContainer.startShimmering()
         } else {
             cell?.feedImageContainer.stopShimmering()
@@ -61,7 +61,7 @@ extension FeedImageCellController: FeedImageLoadingView  {
 }
 
 extension FeedImageCellController: FeedImageRetryView {
-    func display(shouldRetry: Bool) {
-        cell?.feedImageRetryButton.isHidden = !shouldRetry
+    func display(_ viewModel: FeedImageRetryViewModel) {
+        cell?.feedImageRetryButton.isHidden = !viewModel.shouldRetry
     }
 }
