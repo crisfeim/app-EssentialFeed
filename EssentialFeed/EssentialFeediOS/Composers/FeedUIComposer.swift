@@ -52,7 +52,7 @@ private final class FeedViewAdapter: FeedView {
     func display(_ viewModel: FeedViewModel) {
         controller?.tableModel = viewModel.feed.map {
             FeedImageCellController(
-                viewModel: FeedImageViewModel(
+                presenter: FeedImagePresenter(
                     model: $0,
                     imageLoader: imageLoader,
                     imageTransformer: UIImage.init

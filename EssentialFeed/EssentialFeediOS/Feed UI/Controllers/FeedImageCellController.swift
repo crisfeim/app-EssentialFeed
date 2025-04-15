@@ -10,37 +10,38 @@ import UIKit
 
 final class FeedImageCellController {
    
-    let viewModel: FeedImageViewModel<UIImage>
+    let presenter: FeedImagePresenter<UIImage>
     
-    init(viewModel: FeedImageViewModel<UIImage>) {
-        self.viewModel = viewModel
+    init(presenter: FeedImagePresenter<UIImage>) {
+        self.presenter = presenter
     }
     
     func view() -> UITableViewCell {
-        let cell = binded(FeedImageCell())
-        viewModel.loadImageData()
+        let cell = makeCell()
+        presenter.loadImageData()
         return cell
     }
     
     func preload() {
-        viewModel.loadImageData()
+        presenter.loadImageData()
     }
     
     func cancelLoad() {
-        viewModel.cancelImageDataLoad()
+        presenter.cancelImageDataLoad()
     }
     
-    private func binded(_ cell: FeedImageCell) -> FeedImageCell {
-        cell.locationContainer.isHidden = !viewModel.hasLocation
-        cell.locationLabel.text = viewModel.location
-        cell.descriptionLabel.text = viewModel.description
-        cell.onRetry = viewModel.loadImageData
+    private func makeCell() -> FeedImageCell {
+        let cell = FeedImageCell()
+        cell.locationContainer.isHidden = !presenter.hasLocation
+        cell.locationLabel.text = presenter.location
+        cell.descriptionLabel.text = presenter.description
+        cell.onRetry = presenter.loadImageData
 
-        viewModel.onImageLoad = { [weak cell] image in
+        presenter.onImageLoad = { [weak cell] image in
             cell?.feedImageView.image = image
         }
         
-        viewModel.onImageLoadingStateChange = { [weak cell] isLoading in
+        presenter.onImageLoadingStateChange = { [weak cell] isLoading in
             if isLoading {
                 cell?.feedImageContainer.startShimmering()
             } else {
@@ -48,7 +49,7 @@ final class FeedImageCellController {
             }
         }
         
-        viewModel.onShouldRetryImageLoadStateChange = { [weak cell] shouldRetry in
+        presenter.onShouldRetryImageLoadStateChange = { [weak cell] shouldRetry in
             cell?.feedImageRetryButton.isHidden = !shouldRetry
         }
         
