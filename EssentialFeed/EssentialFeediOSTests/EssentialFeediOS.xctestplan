@@ -18,6 +18,12 @@
         }
       ]
     },
+    "environmentVariableEntries" : [
+      {
+        "key" : "MTC_CRASH_ON_REPORT",
+        "value" : "1"
+      }
+    ],
     "testExecutionOrdering" : "random"
   },
   "testTargets" : [
