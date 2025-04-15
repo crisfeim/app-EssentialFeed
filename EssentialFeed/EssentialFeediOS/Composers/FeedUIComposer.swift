@@ -31,20 +31,22 @@ public enum FeedUIComposer {
     }
 }
 
-private final class MainQueueDispatchDecorator: FeedLoader {
-    private let decoratee: FeedLoader
-    init(_ decorate: FeedLoader) {
+private final class MainQueueDispatchDecorator<T> {
+    private let decoratee: T
+    init(_ decorate: T) {
         self.decoratee = decorate
     }
     
+    static func dispatch(work: @escaping () -> Void) {
+        Thread.isMainThread ? work() : DispatchQueue.main.async(execute: work)
+    }
+}
+
+extension MainQueueDispatchDecorator: FeedLoader where T == FeedLoader {
     func load(completion: @escaping (FeedLoader.Result) -> Void) {
         decoratee.load { result in
-            if Thread.isMainThread {
+            Self.dispatch {
                 completion(result)
-            } else {
-                DispatchQueue.main.async {
-                    completion(result)
-                }
             }
         }
     }
