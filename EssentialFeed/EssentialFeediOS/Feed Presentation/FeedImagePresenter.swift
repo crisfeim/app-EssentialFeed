@@ -8,15 +8,15 @@
 import Foundation
 import EssentialFeed
 
-protocol FeedImageView: AnyObject {
+protocol FeedImageView {
     func display<T>(image: T)
 }
 
-protocol FeedImageLoadingView: AnyObject {
+protocol FeedImageLoadingView {
     func display(isLoading: Bool)
 }
 
-protocol FeedImageRetryView: AnyObject {
+protocol FeedImageRetryView {
     func display(shouldRetry: Bool)
 }
 
@@ -39,9 +39,9 @@ final class FeedImagePresenter<Image> {
     var hasLocation: Bool { location != nil }
     var description: String? { model.description }
     
-    weak var imageView: FeedImageView?
-    weak var imageLoadingView: FeedImageLoadingView?
-    weak var imageRetryView: FeedImageRetryView?
+    var imageView: FeedImageView?
+    var imageLoadingView: FeedImageLoadingView?
+    var imageRetryView: FeedImageRetryView?
     
     func loadImageData() {
         imageLoadingView?.display(isLoading: true)
