@@ -20,8 +20,6 @@ final class FeedUIIntegrationTests: XCTestCase {
         XCTAssertEqual(sut.title, localized("FEED_VIEW_TITLE"))
     }
     
-   
-    
     func test_viewDidLoad_doesNotShowRefreshControl() {
         let (sut, _) = makeSUT()
         sut.loadViewIfNeeded()
