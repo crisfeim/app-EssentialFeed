@@ -11,14 +11,12 @@ protocol FeedViewControllerDelegate {
     func didRequestFeedRefresh()
 }
 
-public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
+public final class FeedViewController: UITableViewControllerExtendedLifecycle, UITableViewDataSourcePrefetching {
     var delegate: FeedViewControllerDelegate?
     
     var tableModel = [FeedImageCellController]() {
         didSet { tableView.reloadData() }
     }
-    
-    private var onViewIsAppearing: ((FeedViewController) -> ())?
     
     @IBAction private func refresh() {
         delegate?.didRequestFeedRefresh()
@@ -26,14 +24,12 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        onViewIsAppearing = { vc in
-            vc.refresh()
-            vc.onViewIsAppearing = nil
-        }
+        title = "My Feed"
     }
     
-    public override func viewIsAppearing(_ animated: Bool) {
-        onViewIsAppearing?(self)
+    public override func viewFirstAppearance() {
+        super.viewFirstAppearance()
+        refresh()
     }
     
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -80,5 +76,18 @@ private extension UIRefreshControl {
         } else {
             endRefreshing()
         }
+    }
+}
+
+public class UITableViewControllerExtendedLifecycle: UITableViewController {
+    
+    var firstAppeared = true
+    public override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        firstAppeared ? viewFirstAppearance() : ()
+    }
+    
+    func viewFirstAppearance() {
+        firstAppeared = false
     }
 }
