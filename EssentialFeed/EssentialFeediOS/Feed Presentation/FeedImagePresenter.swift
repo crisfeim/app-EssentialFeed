@@ -20,17 +20,18 @@ struct FeedImageViewModel<T> {
 }
 
 protocol FeedImageView {
-    func display<T>(_ viewModel: FeedImageViewModel<T>)
+    associatedtype Image
+    func display(_ viewModel: FeedImageViewModel<Image>)
 }
 
-final class FeedImagePresenter<Image> {
+final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == Image {
     
-    private let view: FeedImageView
+    private let view: View
     private let model: FeedImage
     private let imageTransformer: (Data) -> Image?
 
     
-    init(view: FeedImageView, model: FeedImage, imageTransformer: @escaping (Data) -> Image?) {
+    init(view: View, model: FeedImage, imageTransformer: @escaping (Data) -> Image?) {
         self.view = view
         self.model = model
         self.imageTransformer = imageTransformer

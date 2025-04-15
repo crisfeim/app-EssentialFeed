@@ -38,8 +38,8 @@ final class FeedImageCellController {
 
 
 extension FeedImageCellController: FeedImageView {
-    func display<T>(_ viewModel: FeedImageViewModel<T>) {
-        cell.feedImageView.image = viewModel.image as? UIImage
+    func display(_ viewModel: FeedImageViewModel<UIImage>) {
+        cell.feedImageView.image = viewModel.image
         cell.locationContainer.isHidden = !viewModel.hasLocation
         cell.locationLabel.text = viewModel.location
         cell.descriptionLabel.text = viewModel.description
