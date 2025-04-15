@@ -8,60 +8,48 @@
 import EssentialFeed
 import UIKit
 
+protocol FeedImageCellControllerDelegate {
+    func didRequestImage()
+    func didCancelImageRequest()
+}
+
 final class FeedImageCellController {
     
-    let presenter: FeedImagePresenter<UIImage>
-    private var cell: FeedImageCell?
+    let delegate: FeedImageCellControllerDelegate
+    private lazy var cell = FeedImageCell()
     
-    init(presenter: FeedImagePresenter<UIImage>) {
-        self.presenter = presenter
+    init(delegate: FeedImageCellControllerDelegate) {
+        self.delegate = delegate
     }
     
     func view() -> UITableViewCell {
-        let cell = makeCell()
-        presenter.loadImageData()
+        delegate.didRequestImage()
         return cell
     }
     
     func preload() {
-        presenter.loadImageData()
+        delegate.didRequestImage()
     }
     
     func cancelLoad() {
-        presenter.cancelImageDataLoad()
-    }
-    
-    private func makeCell() -> FeedImageCell {
-        let cell = FeedImageCell()
-        self.cell = cell
-        cell.locationContainer.isHidden = !presenter.hasLocation
-        cell.locationLabel.text = presenter.location
-        cell.descriptionLabel.text = presenter.description
-        cell.onRetry = presenter.loadImageData
-        
-        return cell
+        delegate.didCancelImageRequest()
     }
 }
 
 
 extension FeedImageCellController: FeedImageView {
     func display<T>(_ viewModel: FeedImageViewModel<T>) {
-        cell?.feedImageView.image = viewModel.image as? UIImage
-    }
-}
-
-extension FeedImageCellController: FeedImageLoadingView  {
-    func display(_ viewModel: FeedImageLoadingViewModel) {
+        cell.feedImageView.image = viewModel.image as? UIImage
+        cell.locationContainer.isHidden = !viewModel.hasLocation
+        cell.locationLabel.text = viewModel.location
+        cell.descriptionLabel.text = viewModel.description
+        cell.feedImageRetryButton.isHidden = !viewModel.shouldRetry
+        cell.onRetry = delegate.didRequestImage
+        
         if viewModel.isLoading {
-            cell?.feedImageContainer.startShimmering()
+            cell.feedImageContainer.startShimmering()
         } else {
-            cell?.feedImageContainer.stopShimmering()
+            cell.feedImageContainer.stopShimmering()
         }
-    }
-}
-
-extension FeedImageCellController: FeedImageRetryView {
-    func display(_ viewModel: FeedImageRetryViewModel) {
-        cell?.feedImageRetryButton.isHidden = !viewModel.shouldRetry
     }
 }

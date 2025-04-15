@@ -40,18 +40,6 @@ extension WeakRefVirtualProxy: FeedLoadingView where T: FeedLoadingView {
     }
 }
 
-extension WeakRefVirtualProxy: FeedImageLoadingView where T: FeedImageLoadingView {
-    func display(_ viewModel: FeedImageLoadingViewModel) {
-        object?.display(viewModel)
-    }
-}
-
-extension WeakRefVirtualProxy: FeedImageRetryView where T: FeedImageRetryView {
-    func display(_ viewModel: FeedImageRetryViewModel) {
-        object?.display(viewModel)
-    }
-}
-
 extension WeakRefVirtualProxy: FeedImageView where T: FeedImageView {
     func display<A>(_ viewModel: FeedImageViewModel<A>) {
         object?.display(viewModel)
@@ -68,19 +56,52 @@ private final class FeedViewAdapter: FeedView {
     }
     
     func display(_ viewModel: FeedViewModel) {
-        controller?.tableModel = viewModel.feed.map {
+        controller?.tableModel = viewModel.feed.map { model in
+            let presenterAdapter = FeedImagePresentationAdapter(
+                model: model,
+                imageLoader: imageLoader
+            )
+           
+            let controller = FeedImageCellController(delegate: presenterAdapter)
+            
             let presenter = FeedImagePresenter(
-                model: $0,
-                imageLoader: imageLoader,
+                view: WeakRefVirtualProxy(controller),
+                model: model,
                 imageTransformer: UIImage.init
             )
             
-            let controller = FeedImageCellController(presenter: presenter)
-            presenter.imageView = WeakRefVirtualProxy(controller)
-            presenter.imageRetryView = WeakRefVirtualProxy(controller)
-            presenter.imageLoadingView = WeakRefVirtualProxy(controller)
+            presenterAdapter.presenter = presenter
             return controller
         }
+    }
+}
+
+private final class FeedImagePresentationAdapter: FeedImageCellControllerDelegate {
+    
+    private var task: FeedImageDataLoaderTask?
+    private let model: FeedImage
+    private let imageLoader: FeedImageDataLoader
+    var presenter: FeedImagePresenter<UIImage>?
+    
+    init(model: FeedImage, imageLoader: FeedImageDataLoader) {
+        self.model = model
+        self.imageLoader = imageLoader
+    }
+    
+    func didRequestImage() {
+        presenter?.didStartShowingImage(for: model)
+        task = imageLoader.loadImageData(from: model.url) { [weak self, model] result in
+            switch result {
+            case .success(let data):
+                self?.presenter?.didFinishLoadingImageData(with: data, for: model)
+            case .failure(let error):
+                self?.presenter?.didFinishLoadingImageData(with: error, for: model)
+            }
+        }
+    }
+    
+    func didCancelImageRequest() {
+        task?.cancel()
     }
 }
 
