@@ -24,7 +24,6 @@ public final class FeedViewController: UITableViewControllerExtendedLifecycle, U
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        title = FeedPresenter.title
     }
     
     public override func viewFirstAppearance() {
