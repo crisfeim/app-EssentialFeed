@@ -15,7 +15,14 @@ public final class FeedViewController: UITableViewControllerExtendedLifecycle, U
     var delegate: FeedViewControllerDelegate?
     
     var tableModel = [FeedImageCellController]() {
-        didSet { tableView.reloadData() }
+        didSet {
+            guard Thread.isMainThread else {
+                return DispatchQueue.main.async { [weak self] in
+                    self?.tableView.reloadData()
+                }
+            }
+            tableView.reloadData()
+        }
     }
     
     @IBAction private func refresh() {
@@ -64,6 +71,11 @@ public final class FeedViewController: UITableViewControllerExtendedLifecycle, U
 
 extension FeedViewController: FeedLoadingView {
     func display(_ viewModel: FeedLoadingViewModel) {
+        guard Thread.isMainThread else {
+            return DispatchQueue.main.async { [weak self] in
+                self?.refreshControl?.refreshIf(viewModel.isLoading)
+            }
+        }
         refreshControl?.refreshIf(viewModel.isLoading)
     }
 }
