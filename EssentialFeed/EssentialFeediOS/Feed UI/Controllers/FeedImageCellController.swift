@@ -50,9 +50,9 @@ extension FeedImageCellController: FeedImageView {
     }
 }
 
-extension FeedImageCellController: FeedLoadingView {
-    func display(_ viewModel: FeedLoadingViewModel) {
-        if viewModel.isLoading {
+extension FeedImageCellController: FeedImageLoadingView  {
+    func display(isLoading: Bool) {
+        if isLoading {
             cell?.feedImageContainer.startShimmering()
         } else {
             cell?.feedImageContainer.stopShimmering()
