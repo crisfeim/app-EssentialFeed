@@ -8,6 +8,18 @@
 import Foundation
 import EssentialFeed
 
+protocol FeedImageView {
+    func display<T>(image: T)
+}
+
+protocol FeedImageLoadingView {
+    func display(isLoading: Bool)
+}
+
+protocol FeedImageRetryView {
+    func display(shouldRetry: Bool)
+}
+
 final class FeedImagePresenter<Image> {
     typealias Observer<T> = (T) -> Void
     
@@ -27,13 +39,13 @@ final class FeedImagePresenter<Image> {
     var hasLocation: Bool { location != nil }
     var description: String? { model.description }
     
-    var onImageLoad: Observer<Image>?
-    var onImageLoadingStateChange: Observer<Bool>?
-    var onShouldRetryImageLoadStateChange: Observer<Bool>?
+    var imageView: FeedImageView?
+    var imageLoadingView: FeedImageLoadingView?
+    var imageRetryView: FeedImageRetryView?
     
     func loadImageData() {
-        onImageLoadingStateChange?(true)
-        onShouldRetryImageLoadStateChange?(false)
+        imageLoadingView?.display(isLoading: true)
+        imageRetryView?.display(shouldRetry: false)
         task = imageLoader.loadImageData(from: url) { [weak self] result in
             self?.handle(result)
         }
@@ -41,11 +53,11 @@ final class FeedImagePresenter<Image> {
     
     private func handle(_ result: FeedImageDataLoader.Result) {
         if let image = (try? result.get()).flatMap(imageTransformer) {
-            onImageLoad?(image)
+            imageView?.display(image: image)
         } else {
-            onShouldRetryImageLoadStateChange?(true)
+            imageRetryView?.display(shouldRetry: true)
         }
-        onImageLoadingStateChange?(false)
+        imageLoadingView?.display(isLoading: false)
     }
     
     func cancelImageDataLoad() {

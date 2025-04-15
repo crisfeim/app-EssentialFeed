@@ -9,8 +9,9 @@ import EssentialFeed
 import UIKit
 
 final class FeedImageCellController {
-   
+    
     let presenter: FeedImagePresenter<UIImage>
+    private var cell: FeedImageCell?
     
     init(presenter: FeedImagePresenter<UIImage>) {
         self.presenter = presenter
@@ -32,27 +33,35 @@ final class FeedImageCellController {
     
     private func makeCell() -> FeedImageCell {
         let cell = FeedImageCell()
+        self.cell = cell
         cell.locationContainer.isHidden = !presenter.hasLocation
         cell.locationLabel.text = presenter.location
         cell.descriptionLabel.text = presenter.description
         cell.onRetry = presenter.loadImageData
-
-        presenter.onImageLoad = { [weak cell] image in
-            cell?.feedImageView.image = image
-        }
-        
-        presenter.onImageLoadingStateChange = { [weak cell] isLoading in
-            if isLoading {
-                cell?.feedImageContainer.startShimmering()
-            } else {
-                cell?.feedImageContainer.stopShimmering()
-            }
-        }
-        
-        presenter.onShouldRetryImageLoadStateChange = { [weak cell] shouldRetry in
-            cell?.feedImageRetryButton.isHidden = !shouldRetry
-        }
         
         return cell
+    }
+}
+
+
+extension FeedImageCellController: FeedImageView {
+    func display<T>(image: T) {
+        cell?.feedImageView.image = image as? UIImage
+    }
+}
+
+extension FeedImageCellController: FeedLoadingView {
+    func display(_ viewModel: FeedLoadingViewModel) {
+        if viewModel.isLoading {
+            cell?.feedImageContainer.startShimmering()
+        } else {
+            cell?.feedImageContainer.stopShimmering()
+        }
+    }
+}
+
+extension FeedImageCellController: FeedImageRetryView {
+    func display(shouldRetry: Bool) {
+        cell?.feedImageRetryButton.isHidden = !shouldRetry
     }
 }
