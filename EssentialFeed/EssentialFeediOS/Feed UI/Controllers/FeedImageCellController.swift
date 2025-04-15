@@ -45,11 +45,6 @@ extension FeedImageCellController: FeedImageView {
         cell.descriptionLabel.text = viewModel.description
         cell.feedImageRetryButton.isHidden = !viewModel.shouldRetry
         cell.onRetry = delegate.didRequestImage
-        
-        if viewModel.isLoading {
-            cell.feedImageContainer.startShimmering()
-        } else {
-            cell.feedImageContainer.stopShimmering()
-        }
+        cell.feedImageContainer.isShimmering = viewModel.isLoading
     }
 }
