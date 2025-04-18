@@ -72,4 +72,17 @@ public final class CoreDataFeedStore: FeedStore {
             action(context)
         }
     }
+    
+    deinit {
+        cleanUpReferencesToPersistentStores()
+    }
+
+    private func cleanUpReferencesToPersistentStores() {
+        context.performAndWait {
+            let coordinator = container.persistentStoreCoordinator
+            for store in coordinator.persistentStores {
+                try? coordinator.remove(store)
+            }
+        }
+    }
 }
