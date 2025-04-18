@@ -15,10 +15,10 @@ extension NSPersistentContainer {
     
     static func load(
         modelName name: String,
-        url: URL,
-        in bundle: Bundle
+        model: NSManagedObjectModel?,
+        url: URL
     ) throws -> NSPersistentContainer {
-        guard let model = NSManagedObjectModel.with(name: name, in: bundle) else { throw LoadingError.modelNotFound }
+        guard let model else { throw LoadingError.modelNotFound }
         let container = NSPersistentContainer(name: name, managedObjectModel: model)
         
         container.persistentStoreDescriptions = [
@@ -38,7 +38,7 @@ extension NSPersistentContainer {
     }
 }
 
-private extension NSManagedObjectModel {
+extension NSManagedObjectModel {
     static func with(name: String, in bundle: Bundle) -> NSManagedObjectModel? {
         return bundle.url(forResource: name, withExtension: "momd")
             .flatMap {

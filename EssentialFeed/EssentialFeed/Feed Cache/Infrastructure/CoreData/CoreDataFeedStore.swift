@@ -9,13 +9,17 @@ import CoreData
 
 public final class CoreDataFeedStore: FeedStore {
     
-    let container: NSPersistentContainer
+    private let container: NSPersistentContainer
     private let context: NSManagedObjectContext
-    public init(storeURL: URL, bundle: Bundle = .main) throws {
+    
+    static private let modelName = "FeedStore"
+    static private let model = NSManagedObjectModel.with(name: modelName, in: Bundle(for: CoreDataFeedStore.self))
+    
+    public init(storeURL: URL) throws {
         container = try NSPersistentContainer.load(
-            modelName: "FeedStore",
-            url: storeURL,
-            in: bundle
+            modelName: Self.modelName,
+            model: Self.model,
+            url: storeURL
         )
         context = container.newBackgroundContext()
     }
@@ -66,6 +70,19 @@ public final class CoreDataFeedStore: FeedStore {
     private func perform(_ action: @escaping (NSManagedObjectContext) -> Void) {
         context.perform { [context] in
             action(context)
+        }
+    }
+    
+    deinit {
+        cleanUpReferencesToPersistentStores()
+    }
+
+    private func cleanUpReferencesToPersistentStores() {
+        context.performAndWait {
+            let coordinator = container.persistentStoreCoordinator
+            for store in coordinator.persistentStores {
+                try? coordinator.remove(store)
+            }
         }
     }
 }
