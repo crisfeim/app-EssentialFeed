@@ -12,6 +12,13 @@ import EssentialFeediOS
 
 final class FeedUIIntegrationTests: XCTestCase {
     
+    func test_viewWillDisappear_requestsFeedLoadCancellation() {
+        let (sut, loader) = makeSUT()
+        sut.simulateAppearance()
+        sut.simulateDisappearance()
+        XCTAssertEqual(loader.feedCancelRequestsCount, 1)
+    }
+    
     func test_feedView_hasTitle() {
         let (sut, _) = makeSUT()
         
@@ -397,10 +404,15 @@ final class FeedUIIntegrationTests: XCTestCase {
         
         private(set) var feedRequests = [(FeedLoader.Result) -> Void]()
         var loadFeedCallCount: Int { feedRequests.count }
-       
+      
+        var feedCancelRequestsCount = 0
         
-        func load(completion: @escaping (FeedLoader.Result) -> Void) {
+        
+        func load(completion: @escaping (FeedLoader.Result) -> Void) -> FeedLoaderTask? {
             feedRequests.append(completion)
+            return TaskSpy { [weak self] in
+                self?.feedCancelRequestsCount += 1
+            }
         }
         
         
@@ -414,7 +426,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         
         // MARK: - FeedImageDataLoader
         
-       private struct TaskSpy: FeedImageDataLoaderTask {
+       private struct TaskSpy: FeedImageDataLoaderTask, FeedLoaderTask {
             let cancelCallback: () -> Void
             func cancel() {
                cancelCallback()
@@ -514,6 +526,11 @@ private extension FeedViewController {
             replaceRefreshControlWithFake()
         }
         beginAppearanceTransition(true, animated: false)
+        endAppearanceTransition()
+    }
+    
+    func simulateDisappearance() {
+        beginAppearanceTransition(false, animated: false)
         endAppearanceTransition()
     }
     

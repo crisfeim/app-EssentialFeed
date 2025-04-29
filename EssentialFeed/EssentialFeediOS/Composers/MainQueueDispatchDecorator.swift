@@ -21,12 +21,12 @@ final class MainQueueDispatchDecorator<T> {
 }
 
 extension MainQueueDispatchDecorator: FeedLoader where T == FeedLoader {
-    func load(completion: @escaping (FeedLoader.Result) -> Void) {
+    func load(completion: @escaping (FeedLoader.Result) -> Void) -> FeedLoaderTask? {
         decoratee.load { result in
             Self.dispatch {
                 completion(result)
             }
-        }
+        } 
     }
 }
 
