@@ -28,9 +28,16 @@ public enum FeedUIComposer {
                 controller: feedController,
                 imageLoader: MainQueueDispatchDecorator(imageLoader)
             ),
-            loadingView: WeakRefVirtualProxy(feedController)
+            loadingView: WeakRefVirtualProxy(feedController),
+            errorView: WeakRefVirtualProxy(feedController)
         )
         return feedController
+    }
+}
+
+extension FeedViewController: FeedErrorView {
+    public func display(_ viewModel: FeedErrorViewModel) {
+        
     }
 }
 
