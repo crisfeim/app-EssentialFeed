@@ -19,7 +19,7 @@ public final class LocalFeedLoader: FeedLoader {
    
 extension LocalFeedLoader {
     public typealias LoadResult = FeedLoader.Result
-    public func load(completion: @escaping (LoadResult) -> Void) {
+    public func load(completion: @escaping (LoadResult) -> Void) -> FeedLoaderTask? {
         store.retrieve { [weak self] result in
             guard let self else { return }
             switch result {
@@ -32,6 +32,7 @@ extension LocalFeedLoader {
                 completion(.success([]))
             }
         }
+        return nil
     }
 }
 

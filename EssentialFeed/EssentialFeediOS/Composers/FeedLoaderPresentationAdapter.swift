@@ -13,13 +13,14 @@ final class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
     private let feedLoader: FeedLoader
     var presenter: FeedPresenter?
     
+    private var currentTask: FeedLoaderTask?
     init(feedLoader: FeedLoader) {
         self.feedLoader = feedLoader
     }
     
     func loadFeed() {
         presenter?.didStartLoadingFeed()
-        feedLoader.load { [weak self] result in
+        currentTask = feedLoader.load { [weak self] result in
             switch result {
             case let .success(feed):
                 self?.presenter?.didFinishLoadingFeed(with: feed)
@@ -31,5 +32,10 @@ final class FeedLoaderPresentationAdapter: FeedViewControllerDelegate {
     
     func didRequestFeedRefresh() {
         loadFeed()
+    }
+    
+    func didRequestFeedLoadCancel() {
+        currentTask?.cancel()
+        currentTask = nil
     }
 }

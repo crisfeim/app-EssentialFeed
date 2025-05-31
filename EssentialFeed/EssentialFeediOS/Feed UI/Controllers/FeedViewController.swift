@@ -10,6 +10,7 @@ import EssentialFeed
 
 protocol FeedViewControllerDelegate {
     func didRequestFeedRefresh()
+    func didRequestFeedLoadCancel()
 }
 
 public final class FeedViewController: UITableViewControllerExtendedLifecycle, UITableViewDataSourcePrefetching {
@@ -27,6 +28,11 @@ public final class FeedViewController: UITableViewControllerExtendedLifecycle, U
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        delegate?.didRequestFeedLoadCancel()
     }
     
     public override func viewFirstAppearance() {
