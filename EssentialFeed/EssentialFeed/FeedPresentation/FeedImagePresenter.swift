@@ -8,16 +8,7 @@ public protocol FeedImageView {
     func display(_ viewModel: FeedImageViewModel<Image>)
 }
 
-public struct FeedImageViewModel<T> {
-    public let description: String?
-    public let location: String?
-    public let image: T?
-    
-    public let isLoading: Bool
-    public let shouldRetry: Bool
-    
-    var hasLocation: Bool { location != nil }
-}
+
 
 
 public final class FeedImagePresenter<View: FeedImageView, Image> where View.Image == Image {
