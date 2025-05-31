@@ -29,7 +29,6 @@ final class FeedViewAdapter: FeedView {
             
             let presenter = FeedImagePresenter(
                 view: WeakRefVirtualProxy(controller),
-                model: model,
                 imageTransformer: UIImage.init
             )
             
